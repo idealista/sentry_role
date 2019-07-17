@@ -1,0 +1,20 @@
+---
+redis.clusters:
+  default:
+    hosts:
+      0:
+        host: {{ sentry_redis_database.host }}
+        port: {{ sentry_redis_database.port }}
+
+{% if sentry_smtp_enabled %}
+mail.from: {{ sentry_smtp_config.mail_from }}
+mail.host: {{ sentry_smtp_config.host }}
+mail.port: {{ sentry_smtp_config.port }}
+mail.username: {{ sentry_smtp_config.user }}
+mail.password: {{ sentry_smtp_config.password }}
+mail.use-tls: {{ sentry_smtp_config.tls_enabled }}
+{% else %}
+mail.backend: 'dummy'
+{% endif %}
+
+system.admin-email: {{ sentry_admin_email }}

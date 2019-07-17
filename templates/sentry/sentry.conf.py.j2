@@ -1,0 +1,14 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'sentry.db.postgres',
+        'NAME': 'sentry',
+        'USER': '{{ sentry_postgresql_database.user }}',
+        'PASSWORD': '{{ sentry_postgresql_database.password }}',
+        'HOST': '{{ sentry_postgresql_database.host }}',
+        'PORT': {{ sentry_postgresql_database.port }},
+    }
+}
+
+SENTRY_WEB_HOST = '{{ sentry_ip }}'
+
+SENTRY_WEB_PORT = {{ sentry_port }}

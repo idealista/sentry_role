@@ -1,0 +1,14 @@
+[Unit]
+Description=Sentry Background Worker
+After=network.target
+
+[Service]
+Type=simple
+User={{ sentry_user }}
+Group={{ sentry_group }}
+WorkingDirectory={{ sentry_installation_path }}
+Environment=SENTRY_CONF={{ sentry_configuration_path }} SENTRY_ENVIRONMENT={{ sentry_environment }}
+ExecStart={{ sentry_installation_path }}/bin/sentry run worker
+
+[Install]
+WantedBy=multi-user.target

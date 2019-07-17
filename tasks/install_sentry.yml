@@ -1,0 +1,77 @@
+---
+- name: Sentry | Installing OS dependencies
+  apt:
+    name: "{{ item }}"
+  loop: "{{ sentry_required_libs }}"
+
+- name: Sentry | Installing Python dependencies
+  pip:
+    name: "{{ sentry_python_required_pkg }}"
+    state: present
+    virtualenv: "{{ sentry_installation_path }}"
+    virtualenv_python: "python{{ sentry_python_version }}"
+
+- name: Sentry | Creating Sentry group
+  group:
+    name: "{{ sentry_group }}"
+    state: present
+
+- name: Sentry | Creating Sentry user
+  user:
+    name: "{{ sentry_user }}"
+    group: "{{ sentry_group }}"
+    state: present
+    create_home: no
+
+- name: Sentry | Checking paths
+  file:
+    path: "{{ item }}"
+    owner: "{{ sentry_user }}"
+    group: "{{ sentry_group }}"
+    state: directory
+  loop:
+    - "{{ sentry_configuration_path }}"
+    - "{{ sentry_installation_path }}"
+
+- name: Sentry | Copying Sentry configuration
+  template:
+    src: "{{ item }}"
+    dest: "{{ sentry_configuration_path }}/{{ item.split('/')[-1] | replace('.j2', '') }}"
+    owner: "{{ sentry_user }}"
+    group: "{{ sentry_group }}"
+    mode: 0644
+  loop: "{{ sentry_configuration_templates }}"
+
+- name: Sentry | Copying service definitions
+  template:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item.split('/')[-1] | replace('.j2', '') }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_fileglob:
+    - "templates/sentry/sentry_*.service.j2"
+  register: sentry_services
+
+- name: Sentry | Registering services
+  systemd:
+    name: "{{ item.item.split('/')[-1].split('.')[0] }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  loop: "{{ sentry_services.results }}"
+  register: sentry_services_changed
+  notify: Restart service
+  #when: sentry_services.changed
+
+- name: Debugging
+  debug:
+    msg: "{{ sentry_services_changed }}"
+
+- name: Debugging2
+  debug:
+    msg: "{{ sentry_services_changed.results | selectattr('changed', 'eq', 'true) | list }}"
+
+#- name: Sentry | Installing Nginx
+#  include_role:
+#    name: nginx

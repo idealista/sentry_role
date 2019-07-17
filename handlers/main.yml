@@ -1,0 +1,6 @@
+---
+- name: Restart service
+  systemd:
+    name: "{{ item.name }}"
+    state: restarted
+  loop: "{{ sentry_services_changed.results | selectattr('changed', 'equalto', 'true') | list }}"

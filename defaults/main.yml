@@ -1,0 +1,43 @@
+---
+sentry_version: '9.1.1'
+
+sentry_ip: 127.0.0.1
+sentry_port: 9000
+
+sentry_environment: testing
+
+sentry_configuration_path: /etc/sentry
+sentry_installation_path: /opt/sentry
+
+sentry_configuration_templates:
+  - sentry/config.yml.j2
+  - sentry/sentry.conf.py.j2
+
+sentry_user: sentry
+sentry_group: sentry
+
+sentry_install_sentry: false
+sentry_install_redis: false
+sentry_install_postgresql: false
+
+sentry_postgresql_database:
+  user: 'someuser'
+  password: 'somepassword'
+  host: '127.0.0.1'
+  port: '5432'
+
+sentry_redis_database:
+  host: 127.0.0.1
+  port: 6379
+
+sentry_admin_email: notifications@nobody.com
+
+sentry_smtp_enabled: false
+
+sentry_smtp_config:
+  mail_from: nobody@nobody.com
+  user: myuser
+  password: mypassword
+  tls_enabled: false
+  host: 127.0.0.1
+  port: 25

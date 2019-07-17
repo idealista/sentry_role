@@ -1,0 +1,43 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+lint:
+  name: yamllint
+
+platforms:
+  - name: sentryserver
+    image: debian:stretch-slim
+    groups:
+      - sentry_server
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+      - '/sys/fs/fuse/connections:/sys/fs/fuse/connections:ro'
+      - '/dev/hugepages:/dev/hugepages'
+    devices:
+      - '/dev/fuse:/dev/fuse'
+    tmpfs:
+      - '/tmp'
+      - '/run'
+      - '/run/lock'
+    stop_signal: 'RTMIN+3'
+    command: '/lib/systemd/systemd'
+
+provisioner:
+  name: ansible
+  inventory:
+    links:
+      group_vars: ./group_vars
+  lint:
+    name: ansible-lint
+
+verifier:
+  name: goss
+  enabled: yes
+  lint:
+    name: yamllint

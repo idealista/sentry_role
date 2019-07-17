@@ -1,0 +1,12 @@
+---
+- name: Sentry | Install Sentry section
+  include_tasks: install_sentry.yml
+  tags:
+    - sentry_install_sentry
+  when: sentry_install_sentry
+
+- name: Sentry | Install Redis section
+  include_tasks: install_redis.yml
+  tags:
+    - sentry_install_redis
+  when: sentry_install_redis
