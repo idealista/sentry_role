@@ -1,8 +1,9 @@
 ---
 sentry_version: '9.1.1'
 
-sentry_ip: 127.0.0.1
-sentry_port: 9000
+sentry_webserver:
+  listen_ip: 127.0.0.1
+  listen_port: 9000
 
 sentry_environment: testing
 
@@ -16,9 +17,7 @@ sentry_configuration_templates:
 sentry_user: sentry
 sentry_group: sentry
 
-sentry_install_sentry: false
-sentry_install_redis: false
-sentry_install_postgresql: false
+sentry_secret_key: supersecretkey
 
 sentry_postgresql_database:
   user: 'someuser'
@@ -41,3 +40,6 @@ sentry_smtp_config:
   tls_enabled: false
   host: 127.0.0.1
   port: 25
+
+sentry_nginx_template_path: templates/nginx
+sentry_nginx_port: 80

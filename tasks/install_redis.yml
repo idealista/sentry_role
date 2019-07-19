@@ -1,4 +1,0 @@
----
-- name: Sentry | Installing Redis
-  include_role:
-    name: redis_role

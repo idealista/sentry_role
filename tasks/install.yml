@@ -11,6 +11,12 @@
     virtualenv: "{{ sentry_installation_path }}"
     virtualenv_python: "python{{ sentry_python_version }}"
 
+- name: Sentry | Fixing permissions on uWSGI
+  file:
+    path: "{{ sentry_installation_path }}/bin/uwsgi"
+    mode: 0755
+    state: file
+
 - name: Sentry | Creating Sentry group
   group:
     name: "{{ sentry_group }}"
@@ -21,7 +27,6 @@
     name: "{{ sentry_user }}"
     group: "{{ sentry_group }}"
     state: present
-    create_home: no
 
 - name: Sentry | Checking paths
   file:
@@ -29,6 +34,7 @@
     owner: "{{ sentry_user }}"
     group: "{{ sentry_group }}"
     state: directory
+    recurse: yes
   loop:
     - "{{ sentry_configuration_path }}"
     - "{{ sentry_installation_path }}"
@@ -41,6 +47,20 @@
     group: "{{ sentry_group }}"
     mode: 0644
   loop: "{{ sentry_configuration_templates }}"
+  register: sentry_configurations
+
+# Get all services name
+- name: Sentry | Getting services to register
+  set_fact:
+    sentry_services_changed: "{{ sentry_services_changed | default([]) }} + [ '{{ item.split('/')[-1] | replace('.j2', '') }}' ]"
+  with_fileglob:
+    - "templates/sentry/sentry_*.service.j2"
+  when: sentry_configurations.changed | bool
+
+- name: Sentry | Running database migrations
+  command: "./sentry --config {{ sentry_configuration_path }} upgrade --noinput"
+  args:
+    chdir: "{{ sentry_installation_path }}/bin/
 
 - name: Sentry | Copying service definitions
   template:
@@ -53,25 +73,24 @@
     - "templates/sentry/sentry_*.service.j2"
   register: sentry_services
 
+# Get service name for only changing services
+- name: Sentry | Getting services to register
+  set_fact:
+    sentry_services_changed: "{{ sentry_services_changed | default([]) | union([item.split('/')[-1]]) }}"
+  loop: "{{ sentry_services.results | select('changed') | map(attribute='dest') | list }}"
+
 - name: Sentry | Registering services
   systemd:
-    name: "{{ item.item.split('/')[-1].split('.')[0] }}"
+    name: "{{ item }}"
     state: started
     enabled: yes
     daemon_reload: yes
-  loop: "{{ sentry_services.results }}"
-  register: sentry_services_changed
-  notify: Restart service
-  #when: sentry_services.changed
+  loop: "{{ sentry_services_changed }}"
+  notify: Restarting service
+  when: sentry_services_changed is defined
 
-- name: Debugging
-  debug:
-    msg: "{{ sentry_services_changed }}"
-
-- name: Debugging2
-  debug:
-    msg: "{{ sentry_services_changed.results | selectattr('changed', 'eq', 'true) | list }}"
-
-#- name: Sentry | Installing Nginx
-#  include_role:
-#    name: nginx
+- name: Sentry | Installing Nginx
+  include_role:
+    name: nginx
+  vars:
+    nginx_extra_servers_template_path: "{{ sentry_nginx_template_path }}"

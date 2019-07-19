@@ -1,2 +1,6 @@
 ---
-sentry_install_sentry: true
+sentry_redis_database:
+  host: sentryredis
+  port: 6379
+
+sentry_nginx_port: 8080

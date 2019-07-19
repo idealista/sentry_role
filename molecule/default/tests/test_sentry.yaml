@@ -1,14 +1,23 @@
-import os
+---
+user:
+  {{ sentry_user }}:
+    exists: true
+    groups:
+        - {{ sentry_group }}
 
-import testinfra.utils.ansible_runner
+service:
+    sentry_cron:
+        enabled: true
+        running: true
+    sentry_worker:
+        enabled: true
+        running: true
+    sentry_web:
+        enabled: true
+        running: true
 
-testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
-
-
-def test_hosts_file(host):
-    f = host.file('/etc/hosts')
-
-    assert f.exists
-    assert f.user == 'root'
-    assert f.group == 'root'
+port:
+    tcp{{ sentry_webserver.listen_port }}:
+        listening: true
+        ip:
+            - {{ sentry_webserver.listening_ip }}

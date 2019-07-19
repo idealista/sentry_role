@@ -10,6 +10,7 @@ lint:
 
 platforms:
   - name: sentryserver
+    hostname: sentryserver
     image: debian:stretch-slim
     groups:
       - sentry_server
@@ -27,9 +28,62 @@ platforms:
       - '/run/lock'
     stop_signal: 'RTMIN+3'
     command: '/lib/systemd/systemd'
+    published_ports:
+      - "8080:8080"
+    networks:
+      - name: sentry_network
+    purge_networks: yes
+
+  - name: sentryredis
+    hostname: sentryredis
+    image: debian:stretch-slim
+    groups:
+      - sentry_redis
+    capabilities:
+      - SYS_ADMIN
+    privileged: yes
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    devices:
+      - '/dev/fuse:/dev/fuse'
+    tmpfs:
+      - '/tmp'
+      - '/run'
+      - '/run/lock'
+    stop_signal: 'RTMIN+3'
+    command: '/lib/systemd/systemd'
+    networks:
+      - name: sentry_network
+    purge_networks: yes
+
+  - name: sentrypostgresql
+    hostname: sentrypostgresql
+    image: debian:stretch-slim
+    groups:
+      - sentry_postgresql
+    capabilities:
+      - SYS_ADMIN
+    privileged: yes
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    devices:
+      - '/dev/fuse:/dev/fuse'
+    tmpfs:
+      - '/tmp'
+      - '/run'
+      - '/run/lock'
+    stop_signal: 'RTMIN+3'
+    command: '/lib/systemd/systemd'
+    networks:
+      - name: sentry_network
+    purge_networks: yes
 
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      fact_caching: jsonfile
+      fact_caching_connection: facts
   inventory:
     links:
       group_vars: ./group_vars

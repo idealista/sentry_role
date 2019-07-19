@@ -3,3 +3,8 @@
   name: nginx
 
 - src: idealista.redis-role
+  name: redis
+
+# Cambiar por idealista.postgresql_role
+- src: geerlingguy.postgresql
+  name: postgresql

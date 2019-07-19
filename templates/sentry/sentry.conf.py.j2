@@ -9,6 +9,8 @@ DATABASES = {
     }
 }
 
-SENTRY_WEB_HOST = '{{ sentry_ip }}'
+SENTRY_CACHE = 'sentry.cache.redis.RedisCache'
 
-SENTRY_WEB_PORT = {{ sentry_port }}
+SENTRY_WEB_HOST = '{{ sentry_webserver.listen_ip }}'
+
+SENTRY_WEB_PORT = {{ sentry_webserver.listen_port }}
