@@ -1,10 +1,11 @@
----
-redis.clusters:
-  default:
-    hosts:
-      0:
-        host: {{ sentry_redis_database.host }}
-        port: {{ sentry_redis_database.port }}
+# While a lot of configuration in Sentry can be changed via the UI, for all
+# new-style config (as of 8.0) you can also declare values here in this file
+# to enforce defaults or to ensure they cannot be changed via the UI. For more
+# information see the Sentry documentation.
+
+###############
+# Mail Server #
+###############
 
 {% if sentry_smtp_enabled %}
 mail.from: {{ sentry_smtp_config.mail_from }}
@@ -17,6 +18,70 @@ mail.use-tls: {{ sentry_smtp_config.tls_enabled }}
 mail.backend: 'dummy'
 {% endif %}
 
-system.admin-email: {{ sentry_admin_email }}
+# If you'd like to configure email replies, enable this.
+# mail.enable-replies: false
 
-system.secret-key: {{ sentry_secret_key }}
+# When email-replies are enabled, this value is used in the Reply-To header
+# mail.reply-hostname: ''
+
+# If you're using mailgun for inbound mail, set your API key and configure a
+# route to forward to /api/hooks/mailgun/inbound/
+# mail.mailgun-api-key: ''
+
+###################
+# System Settings #
+###################
+
+# If this file ever becomes compromised, it's important to regenerate your a new key
+# Changing this value will result in all current sessions being invalidated.
+# A new key can be generated with `$ sentry config generate-secret-key`
+system.secret-key: '{{ sentry_secret_key }}'
+system.admin-email: '{{ sentry_admin_email }}'
+system.url-prefix: '{{ sentry_nginx_url }}'
+
+
+
+# The ``redis.clusters`` setting is used, unsurprisingly, to configure Redis
+# clusters. These clusters can be then referred to by name when configuring
+# backends such as the cache, digests, or TSDB backend.
+#
+# Two types of clusters are currently supported:
+#
+#   rb.Cluster
+#   A redis blaster cluster is the traditional cluster used by most services
+#   within sentry. This is the default type cluster type.
+#
+#   rediscluster.StrictRedisCluster
+#   An official Redis Cluster can be configured by marking the named group with
+#   the ``is_redis_cluster: True`` flag. In future versions of Sentry more
+#   services will require this type of cluster.
+#
+redis.clusters:
+  default:
+    hosts:
+      0:
+        host: {{ sentry_redis_database.host }}
+        port: {{ sentry_redis_database.port }}
+
+################
+# File storage #
+################
+
+# Uploaded media uses these `filestore` settings. The available
+# backends are: `filesystem`, `gcs`, and `s3`.
+
+filestore.backend: 'filesystem'
+filestore.options:
+  location: '{{ sentry_filestore_path }}'
+
+# NOTE: See docs/filestore for instructions on configuring the shell environment
+#       with authentication credentials for Google Cloud.
+# filestore.backend: 'gcs'
+# filestore.options:
+#   bucket_name: 's3-bucket-name'
+
+# filestore.backend: 's3'
+# filestore.options:
+#   access_key: 'AKIXXXXXX'
+#   secret_key: 'XXXXXXX'
+#   bucket_name: 's3-bucket-name'

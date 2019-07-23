@@ -9,6 +9,7 @@ sentry_environment: testing
 
 sentry_configuration_path: /etc/sentry
 sentry_installation_path: /opt/sentry
+sentry_filestore_path: /tmp/sentry
 
 sentry_configuration_templates:
   - sentry/config.yml.j2
@@ -16,6 +17,11 @@ sentry_configuration_templates:
 
 sentry_user: sentry
 sentry_group: sentry
+
+sentry_admin_users:
+  - email: 'someuser@email'
+    password: 'somepassword'
+    superuser: yes
 
 sentry_secret_key: supersecretkey
 
@@ -43,3 +49,8 @@ sentry_smtp_config:
 
 sentry_nginx_template_path: templates/nginx
 sentry_nginx_port: 80
+sentry_nginx_url: 'http://sentry.mydomain'
+
+sentry_allow_users_create_accounts: yes
+
+sentry_beacon_enabled: yes

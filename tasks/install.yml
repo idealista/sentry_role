@@ -38,6 +38,7 @@
   loop:
     - "{{ sentry_configuration_path }}"
     - "{{ sentry_installation_path }}"
+    - "{{ sentry_filestore_path }}"
 
 - name: Sentry | Copying Sentry configuration
   template:
@@ -60,7 +61,38 @@
 - name: Sentry | Running database migrations
   command: "./sentry --config {{ sentry_configuration_path }} upgrade --noinput"
   args:
-    chdir: "{{ sentry_installation_path }}/bin/
+    chdir: "{{ sentry_installation_path }}/bin/"
+  register: sentry_upgrade
+
+- name: Debug
+  debug:
+    msg: "{{ sentry_upgrade }}"
+
+- name: Sentry | Checking existing users
+  command:
+    "./sentry --config {{ sentry_configuration_path }} permissions list \
+    --user {{ item.email }}"
+  args:
+    chdir: "{{ sentry_installation_path}}/bin/"
+  loop: "{{ sentry_admin_users }}"
+  ignore_errors: yes
+  register: sentry_existing_users
+
+- name: Debugging
+  debug:
+    msg: "{{ sentry_existing_users }}"
+
+- name: Sentry | Creating admin users
+  command:
+    "./sentry --config {{ sentry_configuration_path }} createuser \
+    --email {{ item.email }} \
+    --password {{ item.password }} \
+    {{ '--superuser' if item.superuser else ''}} \
+    --no-input"
+  args:
+    chdir: "{{ sentry_installation_path }}/bin/"
+  loop: "{{ sentry_admin_users }}"
+  when: "{{ item.email not in sentry_existing_users.stdout }}"
 
 - name: Sentry | Copying service definitions
   template:

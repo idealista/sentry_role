@@ -1,6 +1,20 @@
 ---
 sentry_redis_database:
-  host: sentryredis
+  host: "{{ hostvars['sentryredis']['ansible_facts']['default_ipv4']['address'] }}"
   port: 6379
 
 sentry_nginx_port: 8080
+sentry_nginx_url: http://sentryserver
+
+sentry_beacon_enabled: no
+
+sentry_allow_users_create_accounts: no
+
+sentry_admin_users:
+  - email: admin@email
+    password: admin
+    superuser: yes
+
+  - email: user@email
+    password: user
+    superuser: false
