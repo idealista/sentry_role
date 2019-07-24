@@ -1,6 +1,6 @@
 server {
-  listen {{ sentry_nginx_port }};
-  server_name {{ sentry_nginx_url }};
+  listen {{ sentry_nginx.port }};
+  server_name {{ sentry_nginx.url }};
 
   location / {
     include     uwsgi_params;

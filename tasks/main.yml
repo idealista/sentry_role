@@ -11,5 +11,6 @@
 
 - name: Sentry | Install Nginx
   include_tasks: nginx.yml
+  when: sentry_nginx_enabled
   tags:
     - sentry_nginx
