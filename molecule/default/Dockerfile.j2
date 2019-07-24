@@ -6,7 +6,7 @@ FROM {{ item.registry.url }}/{{ item.image }}
 FROM {{ item.image }}
 {% endif %}
 
-RUN mkdir -p /usr/share/man/man1 && mkdir /usr/share/man/man7
+RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7
 
 RUN if [ $(command -v apt-get) ]; then apt-get update && apt-get install -y iproute systemd python sudo cron bash ca-certificates && apt-get clean; \
     elif [ $(command -v dnf) ]; then dnf makecache && dnf --assumeyes install python sudo python-devel python*-dnf bash && dnf clean all; \
