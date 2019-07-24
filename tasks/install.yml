@@ -1,8 +1,7 @@
 ---
 - name: Sentry | Installing OS dependencies
   apt:
-    name: "{{ item }}"
-  loop: "{{ sentry_required_libs }}"
+    name: "{{ sentry_required_libs }}"
 
 - name: Sentry | Installing Python dependencies
   pip:
