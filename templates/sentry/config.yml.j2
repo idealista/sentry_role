@@ -1,3 +1,5 @@
+{{ ansible_managed | comment }}
+
 # While a lot of configuration in Sentry can be changed via the UI, for all
 # new-style config (as of 8.0) you can also declare values here in this file
 # to enforce defaults or to ensure they cannot be changed via the UI. For more
@@ -37,8 +39,6 @@ mail.backend: 'dummy'
 # A new key can be generated with `$ sentry config generate-secret-key`
 system.secret-key: '{{ sentry_secret_key }}'
 system.admin-email: '{{ sentry_admin_email }}'
-system.url-prefix: '{{ sentry_nginx_url }}'
-
 
 
 # The ``redis.clusters`` setting is used, unsurprisingly, to configure Redis

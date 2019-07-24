@@ -19,6 +19,7 @@
   loop: "{{ sentry_admin_users }}"
   no_log: yes
   ignore_errors: yes
+  changed_when: false
   tags:
     - skip_ansible_lint
 

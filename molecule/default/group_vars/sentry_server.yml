@@ -3,9 +3,6 @@ sentry_redis_database:
   host: "{{ hostvars['sentryredis']['ansible_facts']['default_ipv4']['address'] }}"
   port: 6379
 
-sentry_nginx_port: 8080
-sentry_nginx_url: http://sentryserver
-
 sentry_smtp_enabled: no
 
 sentry_admin_users:

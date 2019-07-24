@@ -1,7 +1,4 @@
 ---
-- src: idealista.nginx_role
-  name: nginx
-
 - src: idealista.redis-role
   name: redis
 

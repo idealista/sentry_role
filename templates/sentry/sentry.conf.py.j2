@@ -1,3 +1,5 @@
+{{ ansible_managed | comment }}
+
 # This file is just Python, with a touch of Django which means
 # you can inherit and tweak settings to your hearts content.
 from sentry.conf.server import *
@@ -128,7 +130,6 @@ SENTRY_WEB_HOST = '{{ sentry_webserver.listen_ip }}'
 SENTRY_WEB_PORT = {{ sentry_webserver.listen_port }}
 SENTRY_WEB_OPTIONS = {
     # 'workers': 3,  # the number of web workers
-    'protocol': 'uwsgi',
 }
 
 SENTRY_FEATURES['auth:register'] = {{ sentry_allow_users_create_accounts }}

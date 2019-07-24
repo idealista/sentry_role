@@ -31,11 +31,6 @@ idealista.redis_role
 idealista.postgresql_role 
 ```
 
-Optionally, Sentry can be behind Nginx, if you want to use it, you have to install Ansible Galaxy requirements before:
-```
-ansible-galaxy install -p roles -r requirements.yml -f
-```
-
 ### Installing
 
 Create or add to your roles dependency file (e.g requirements.yml):
@@ -118,13 +113,6 @@ If external SMTP is enabled, following variables must be defined
 - `sentry_smtp_config.tls_enabled`
 - `sentry_smtp_config.host`
 - `sentry_smtp_config.port`
-
-Nginx configuration variables:
-
-- `sentry_nginx_enabled` enable Nginx as reverse proxy for sentry
-- `sentry_nginx_template_path` playbook path for nginx templates
-- `sentry_nginx.port` Nginx listening port
-- `sentry_nginx.url` public domain
 
 ## Testing
 

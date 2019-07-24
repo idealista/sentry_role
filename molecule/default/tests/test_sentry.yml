@@ -17,7 +17,7 @@ service:
     running: true
 
 port:
-  tcp{{ sentry_webserver.listen_port }}:
+  tcp:{{ sentry_webserver.listen_port }}:
     listening: true
     ip:
-      - {{ sentry_webserver.listening_ip }}
+      - {{ sentry_webserver.listen_ip }}

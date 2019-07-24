@@ -8,9 +8,3 @@
   include_tasks: config.yml
   tags:
     - sentry_config
-
-- name: Sentry | Install Nginx
-  include_tasks: nginx.yml
-  when: sentry_nginx_enabled
-  tags:
-    - sentry_nginx
