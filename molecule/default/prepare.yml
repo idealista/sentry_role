@@ -29,4 +29,3 @@
       when: ansible_os_family == 'Debian'
   roles:
     - redis
-

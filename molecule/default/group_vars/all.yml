@@ -1,3 +1,4 @@
+---
 sentry_postgresql_database:
   user: 'someuser'
   password: 'somepassword'

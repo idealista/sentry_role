@@ -14,5 +14,3 @@ hba_entry:
     user: "{{ sentry_postgresql_database.user }}"
     address: "{{ hostvars['sentryserver']['ansible_facts']['default_ipv4']['address'] }}/32"
     auth_method: password
-
-
