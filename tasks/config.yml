@@ -4,6 +4,8 @@
   args:
     chdir: "{{ sentry_installation_path }}/bin/"
   when: sentry_pip_result.changed
+  tags:
+    - skip_ansible_lint
 
 - name: Sentry | Creating admin users
   command:
@@ -17,6 +19,8 @@
   loop: "{{ sentry_admin_users }}"
   no_log: yes
   ignore_errors: yes
+  tags:
+    - skip_ansible_lint
 
 - name: Sentry | Setting cleanup task
   cron:

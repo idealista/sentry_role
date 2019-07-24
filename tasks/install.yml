@@ -58,6 +58,8 @@
   with_fileglob:
     - "templates/sentry/sentry_*.service.j2"
   when: sentry_configurations.changed | bool
+  tags:
+    - skip_ansible_lint
 
 - name: Sentry | Copying service definitions
   template:
