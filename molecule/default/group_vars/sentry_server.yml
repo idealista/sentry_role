@@ -6,9 +6,7 @@ sentry_redis_database:
 sentry_nginx_port: 8080
 sentry_nginx_url: http://sentryserver
 
-sentry_beacon_enabled: no
-
-sentry_allow_users_create_accounts: no
+sentry_smtp_enabled: no
 
 sentry_admin_users:
   - email: admin@email

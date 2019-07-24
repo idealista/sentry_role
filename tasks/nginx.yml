@@ -1,0 +1,6 @@
+---
+- name: Sentry | Installing Nginx
+  include_role:
+    name: nginx
+  vars:
+    nginx_extra_servers_template_path: "{{ sentry_nginx_template_path }}"

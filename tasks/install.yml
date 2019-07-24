@@ -10,6 +10,7 @@
     state: present
     virtualenv: "{{ sentry_installation_path }}"
     virtualenv_python: "python{{ sentry_python_version }}"
+  register: sentry_pip_result
 
 - name: Sentry | Fixing permissions on uWSGI
   file:
@@ -58,42 +59,6 @@
     - "templates/sentry/sentry_*.service.j2"
   when: sentry_configurations.changed | bool
 
-- name: Sentry | Running database migrations
-  command: "./sentry --config {{ sentry_configuration_path }} upgrade --noinput"
-  args:
-    chdir: "{{ sentry_installation_path }}/bin/"
-  register: sentry_upgrade
-
-- name: Debug
-  debug:
-    msg: "{{ sentry_upgrade }}"
-
-- name: Sentry | Checking existing users
-  command:
-    "./sentry --config {{ sentry_configuration_path }} permissions list \
-    --user {{ item.email }}"
-  args:
-    chdir: "{{ sentry_installation_path}}/bin/"
-  loop: "{{ sentry_admin_users }}"
-  ignore_errors: yes
-  register: sentry_existing_users
-
-- name: Debugging
-  debug:
-    msg: "{{ sentry_existing_users }}"
-
-- name: Sentry | Creating admin users
-  command:
-    "./sentry --config {{ sentry_configuration_path }} createuser \
-    --email {{ item.email }} \
-    --password {{ item.password }} \
-    {{ '--superuser' if item.superuser else ''}} \
-    --no-input"
-  args:
-    chdir: "{{ sentry_installation_path }}/bin/"
-  loop: "{{ sentry_admin_users }}"
-  when: "{{ item.email not in sentry_existing_users.stdout }}"
-
 - name: Sentry | Copying service definitions
   template:
     src: "{{ item }}"
@@ -120,9 +85,3 @@
   loop: "{{ sentry_services_changed }}"
   notify: Restarting service
   when: sentry_services_changed is defined
-
-- name: Sentry | Installing Nginx
-  include_role:
-    name: nginx
-  vars:
-    nginx_extra_servers_template_path: "{{ sentry_nginx_template_path }}"

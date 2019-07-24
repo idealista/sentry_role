@@ -3,3 +3,13 @@
   include_tasks: install.yml
   tags:
     - sentry_install
+
+- name: Sentry | Config section
+  include_tasks: config.yml
+  tags:
+    - sentry_config
+
+- name: Sentry | Install Nginx
+  include_tasks: nginx.yml
+  tags:
+    - sentry_nginx
