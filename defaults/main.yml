@@ -1,0 +1,61 @@
+---
+sentry_version: '9.1.1'
+
+sentry_webserver:
+  listen_ip: '0.0.0.0'
+  listen_port: 9000
+
+sentry_environment: testing
+
+sentry_configuration_path: /etc/sentry
+sentry_installation_path: /opt/sentry
+sentry_filestore_path: /tmp/sentry
+
+sentry_configuration_templates:
+  - sentry/config.yml.j2
+  - sentry/sentry.conf.py.j2
+
+sentry_user: sentry
+sentry_group: sentry
+
+sentry_admin_users:
+  - email: 'someuser@email'
+    password: 'somepassword'
+    superuser: yes
+
+sentry_secret_key: supersecretkey
+
+sentry_postgresql_database:
+  user: 'someuser'
+  password: 'somepassword'
+  host: '127.0.0.1'
+  port: '5432'
+
+sentry_redis_database:
+  host: 127.0.0.1
+  port: 6379
+
+sentry_admin_email: notifications@nobody.com
+
+sentry_smtp_enabled: yes
+
+sentry_smtp_config:
+  mail_from: nobody@nobody.com
+  user: myuser
+  password: mypassword
+  tls_enabled: false
+  host: 127.0.0.1
+  port: 25
+
+sentry_allow_users_create_accounts: no
+
+sentry_beacon_enabled: yes
+
+sentry_cleanup_keep_days: 30
+
+sentry_cleanup_cron:
+  minute: '59'
+  hour: '23'
+  day: '*'
+  month: '*'
+  weekday: '*'

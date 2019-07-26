@@ -1,0 +1,23 @@
+---
+user:
+  {{ sentry_user }}:
+    exists: true
+    groups:
+      - {{ sentry_group }}
+
+service:
+  sentry_cron:
+    enabled: true
+    running: true
+  sentry_worker:
+    enabled: true
+    running: true
+  sentry_web:
+    enabled: true
+    running: true
+
+port:
+  tcp:{{ sentry_webserver.listen_port }}:
+    listening: true
+    ip:
+      - {{ sentry_webserver.listen_ip }}

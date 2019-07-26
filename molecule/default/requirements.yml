@@ -1,0 +1,6 @@
+---
+- src: idealista.redis-role
+  name: redis
+
+- src: geerlingguy.postgresql
+  name: postgresql

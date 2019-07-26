@@ -1,0 +1,15 @@
+---
+sentry_redis_database:
+  host: "{{ hostvars['sentryredis']['ansible_facts']['default_ipv4']['address'] }}"
+  port: 6379
+
+sentry_smtp_enabled: no
+
+sentry_admin_users:
+  - email: admin@email
+    password: admin
+    superuser: yes
+
+  - email: user@email
+    password: user
+    superuser: false

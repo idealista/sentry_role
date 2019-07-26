@@ -1,0 +1,5 @@
+---
+- name: Converge
+  hosts: sentry_server
+  roles:
+    - role: sentry_role

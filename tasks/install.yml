@@ -1,0 +1,88 @@
+---
+- name: Sentry | Installing OS dependencies
+  apt:
+    name: "{{ sentry_required_libs }}"
+
+- name: Sentry | Installing Python dependencies
+  pip:
+    name: "{{ sentry_python_required_pkg }}"
+    state: present
+    virtualenv: "{{ sentry_installation_path }}"
+    virtualenv_python: "python{{ sentry_python_version }}"
+  register: sentry_pip_result
+
+- name: Sentry | Fixing permissions on uWSGI
+  file:
+    path: "{{ sentry_installation_path }}/bin/uwsgi"
+    mode: 0755
+    state: file
+
+- name: Sentry | Creating Sentry group
+  group:
+    name: "{{ sentry_group }}"
+    state: present
+
+- name: Sentry | Creating Sentry user
+  user:
+    name: "{{ sentry_user }}"
+    group: "{{ sentry_group }}"
+    state: present
+
+- name: Sentry | Checking paths
+  file:
+    path: "{{ item }}"
+    owner: "{{ sentry_user }}"
+    group: "{{ sentry_group }}"
+    state: directory
+    recurse: yes
+  loop:
+    - "{{ sentry_configuration_path }}"
+    - "{{ sentry_installation_path }}"
+    - "{{ sentry_filestore_path }}"
+
+- name: Sentry | Copying Sentry configuration
+  template:
+    src: "{{ item }}"
+    dest: "{{ sentry_configuration_path }}/{{ item.split('/')[-1] | replace('.j2', '') }}"
+    owner: "{{ sentry_user }}"
+    group: "{{ sentry_group }}"
+    mode: 0644
+  loop: "{{ sentry_configuration_templates }}"
+  register: sentry_configurations
+
+# Get all services name
+- name: Sentry | Getting services to register
+  set_fact:
+    sentry_services_changed: "{{ sentry_services_changed | default([]) }} + [ '{{ item.split('/')[-1] | replace('.j2', '') }}' ]"
+  with_fileglob:
+    - "templates/sentry/sentry_*.service.j2"
+  when: sentry_configurations.changed | bool
+  tags:
+    - skip_ansible_lint
+
+- name: Sentry | Copying service definitions
+  template:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item.split('/')[-1] | replace('.j2', '') }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_fileglob:
+    - "templates/sentry/sentry_*.service.j2"
+  register: sentry_services
+
+# Get service name for only changing services
+- name: Sentry | Getting services to register
+  set_fact:
+    sentry_services_changed: "{{ sentry_services_changed | default([]) | union([item.split('/')[-1]]) }}"
+  loop: "{{ sentry_services.results | select('changed') | map(attribute='dest') | list }}"
+
+- name: Sentry | Registering services
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  loop: "{{ sentry_services_changed }}"
+  notify: Restarting service
+  when: sentry_services_changed is defined

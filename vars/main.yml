@@ -1,0 +1,20 @@
+---
+# No support for python3 :(
+sentry_python_version: '2.7'
+
+sentry_python_required_pkg:
+  - "sentry=={{ sentry_version }}"
+
+sentry_required_libs:
+  - python-setuptools
+  - python-pip
+  - python-virtualenv
+  - python-dev
+  - gcc
+  - libxslt1-dev
+  - libffi-dev
+  - libjpeg-dev
+  - libxml2-dev
+  - libxslt-dev
+  - libyaml-dev
+  - libpq-dev

@@ -1,0 +1,18 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Sentry Main Service
+After=network.target
+Requires=sentry_worker.service
+Requires=sentry_cron.service
+
+[Service]
+Type=simple
+User={{ sentry_user }}
+Group={{ sentry_group }}
+WorkingDirectory={{ sentry_installation_path }}
+Environment=SENTRY_CONF={{ sentry_configuration_path }} SENTRY_ENVIRONMENT={{ sentry_environment }}
+ExecStart={{ sentry_installation_path }}/bin/sentry run web
+
+[Install]
+WantedBy=multi-user.target

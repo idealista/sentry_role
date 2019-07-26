@@ -1,0 +1,10 @@
+---
+- name: Sentry | Install section
+  include_tasks: install.yml
+  tags:
+    - sentry_install
+
+- name: Sentry | Config section
+  include_tasks: config.yml
+  tags:
+    - sentry_config
