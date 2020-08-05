@@ -19,7 +19,6 @@ platforms:
     volumes:
       - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
       - '/sys/fs/fuse/connections:/sys/fs/fuse/connections:ro'
-      - '/dev/hugepages:/dev/hugepages'
     devices:
       - '/dev/fuse:/dev/fuse'
     tmpfs:
