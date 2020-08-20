@@ -1,0 +1,23 @@
+---
+
+- name: Sentry
+  hosts: sentry_server
+  gather_facts: true
+
+- name: PostgreSQL
+  hosts: sentry_postgresql
+  pre_tasks:
+    - name: Convert entered Symfony environment to lowercase
+      debug: var=hostvars
+  roles:
+    - role: postgresql_role
+
+- name: Redis
+  hosts: sentry_redis
+  roles:
+    - role: redis_role
+
+- name: Sentry
+  hosts: sentry_server
+  roles:
+    - role: sentry_role

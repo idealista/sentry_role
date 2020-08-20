@@ -1,6 +1,9 @@
 ---
-- src: idealista.redis-role
-  name: redis
+- src: idealista.redis_role
+  version: 4.0.3
+  name: redis_role
 
-- src: geerlingguy.postgresql
-  name: postgresql
+- src: https://github.com/idealista/postgresql_role
+  version: features/4
+  scm: git
+  name: postgresql_role
