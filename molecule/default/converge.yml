@@ -6,11 +6,14 @@
 
 - name: PostgreSQL
   hosts: sentry_postgresql
-  pre_tasks:
-    - name: Convert entered Symfony environment to lowercase
-      debug: var=hostvars
   roles:
     - role: postgresql_role
+  post_tasks:
+    - name: restart postgresql
+      systemd:
+        name: "{{ pg_service }}"
+        state: restarted
+      changed_when: false
 
 - name: Redis
   hosts: sentry_redis

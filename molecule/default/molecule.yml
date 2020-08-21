@@ -6,7 +6,6 @@ driver:
 lint: |
   yamllint .
   ansible-lint .
-
 platforms:
   - name: sentryserver
     hostname: sentryserver
