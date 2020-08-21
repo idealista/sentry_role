@@ -1,6 +1,6 @@
 ---
 language: python
-python: "3.6"
+python: "3.7"
 os: linux
 dist: xenial
 services:
@@ -9,7 +9,7 @@ install:
   - pip install pipenv
   - pipenv sync
 script:
-   - pipenv run molecule test
+  - pipenv run molecule test
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
