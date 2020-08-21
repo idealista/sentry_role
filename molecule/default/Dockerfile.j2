@@ -7,5 +7,5 @@ FROM {{ item.image }}
 {% endif %}
 
 RUN apt-get update && \
-    apt-get install -y iproute systemd python sudo cron bash ca-certificates gnupg && \
+    apt-get install -y python sudo bash ca-certificates iproute2 systemd systemd-sysv python-pip && \
     apt-get clean; 
