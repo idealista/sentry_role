@@ -1,16 +1,17 @@
 ---
-postgresql_databases:
+
+pg_major_release: 9.6
+pg_os_tuning: false
+
+pg_listen_addresses: "0.0.0.0"
+
+pg_databases:
   - name: sentry
 
-postgresql_users:
+pg_users:
   - name: "{{ sentry_postgresql_database.user }}"
     password: "{{ sentry_postgresql_database.password }}"
     role_attr_flags: SUPERUSER
 
-
-hba_entry:
-  - type: host
-    database: sentry
-    user: "{{ sentry_postgresql_database.user }}"
-    address: "{{ hostvars['sentryserver']['ansible_facts']['default_ipv4']['address'] }}/32"
-    auth_method: password
+pg_hba_declarations:
+  - "host sentry {{ sentry_postgresql_database.user }} {{ hostvars['sentryserver']['ansible_all_ipv4_addresses'][0] }}/32 password"

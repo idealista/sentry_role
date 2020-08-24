@@ -1,11 +1,12 @@
-![Logo](logo.gif)
+![Logo](https://raw.githubusercontent.com/idealista/sentry_role/master/logo.gif)
 
 [![Build Status](https://travis-ci.org/idealista/sentry_role.png)](https://travis-ci.org/idealista/sentry_role)
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-idealista.sentry_role-B62682.svg)](https://galaxy.ansible.com/idealista/sentry_role)
 
 Sentry Ansible role
 =========
 
-This role installs a Sentry server
+This role installs a [Sentry](https://sentry.io/) server
 
 - [Getting Started](#getting-started)
 	- [Prerequisites](#prerequisites)
@@ -20,16 +21,16 @@ This role installs a Sentry server
 
 ## Getting started
 
-Install Sentry in a Debian system
+Installs Sentry in a Debian system
 
 ### Prerequesites
 
-Sentry needs Redis and PostgreSQL for working. This role only install and setup Sentry, so you will need other roles to accomplish Sentry dependencies.
+Sentry needs [Redis](https://redis.io/) and [PostgreSQL](https://www.postgresql.org/) in order to work. This role only installs and setup Sentry, so you will need other roles to accomplish Sentry dependencies.
+
 These other roles can be helpful:
-```
-idealista.redis_role
-idealista.postgresql_role 
-```
+
+* [idealista.redis_role](https://github.com/idealista/redis_role)
+* [idealista.postgresql_role](https://github.com/idealista/postgresql_role) 
 
 ### Installing
 
@@ -37,7 +38,7 @@ Create or add to your roles dependency file (e.g requirements.yml):
 
 ``` yml
 - src: idealista.sentry_role
-  version: 1.0.0
+  version: 1.1.0
   name: sentry
 ```
 
@@ -118,7 +119,7 @@ If external SMTP is enabled, following variables must be defined
 
 Tests are executed with Molecule and Docker
 
-Run `pip install requirements-test.txt` before running tests to install dependencies
+Run `pip install test-requirements.txt` before running tests to install dependencies
 
 Launch tests:
 
@@ -126,7 +127,9 @@ Launch tests:
 
 ## Built With
 
-![Ansible](https://img.shields.io/badge/ansible-2.8.2-green.svg)
+![Ansible](https://img.shields.io/badge/ansible-2.8.8-green.svg)
+![Molecule](https://img.shields.io/badge/molecule-3.0.4-green.svg)
+![Goss](https://img.shields.io/badge/goss-0.3.13-green.svg)
 
 ## Versioning
 

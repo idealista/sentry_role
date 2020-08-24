@@ -1,0 +1,26 @@
+---
+
+- name: Sentry
+  hosts: sentry_server
+  gather_facts: true
+
+- name: PostgreSQL
+  hosts: sentry_postgresql
+  roles:
+    - role: postgresql_role
+  post_tasks:
+    - name: restart postgresql
+      systemd:
+        name: "{{ pg_service }}"
+        state: restarted
+      changed_when: false
+
+- name: Redis
+  hosts: sentry_redis
+  roles:
+    - role: redis_role
+
+- name: Sentry
+  hosts: sentry_server
+  roles:
+    - role: sentry_role

@@ -1,4 +1,13 @@
-.idea/
-venv/
+tests/playbook.retry
+tests/.cache
+__pycache__
+.pytest_cache
+.molecule
+.cache
 
-facts/
+*.iml
+.idea
+.project
+
+*.pyc
+**/.vscode

@@ -1,4 +1,5 @@
 ---
+
 - name: Sentry | Running database migrations
   command: "./sentry --config {{ sentry_configuration_path }} upgrade --noinput"
   args:

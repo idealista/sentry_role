@@ -1,13 +1,11 @@
 ---
 dependency:
   name: galaxy
-
 driver:
   name: docker
-
-lint:
-  name: yamllint
-
+lint: |
+  yamllint .
+  ansible-lint .
 platforms:
   - name: sentryserver
     hostname: sentryserver
@@ -31,7 +29,6 @@ platforms:
       - "9000:9000"
     networks:
       - name: sentry_network
-    purge_networks: yes
 
   - name: sentryredis
     hostname: sentryredis
@@ -53,7 +50,6 @@ platforms:
     command: '/lib/systemd/systemd'
     networks:
       - name: sentry_network
-    purge_networks: yes
 
   - name: sentrypostgresql
     hostname: sentrypostgresql
@@ -75,22 +71,11 @@ platforms:
     command: '/lib/systemd/systemd'
     networks:
       - name: sentry_network
-    purge_networks: yes
+    exposed_ports:
+      - 5432/tcp
 
 provisioner:
   name: ansible
-  config_options:
-    defaults:
-      fact_caching: jsonfile
-      fact_caching_connection: facts
-  inventory:
-    links:
-      group_vars: ./group_vars
-  lint:
-    name: ansible-lint
 
 verifier:
-  name: goss
-  enabled: yes
-  lint:
-    name: yamllint
+  name: ansible
