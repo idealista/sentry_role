@@ -1,5 +1,5 @@
 ---
-sentry_version: '9.1.1'
+sentry_version: '9.1.2'
 
 sentry_webserver:
   listen_ip: '0.0.0.0'
